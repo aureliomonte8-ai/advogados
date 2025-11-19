@@ -6,7 +6,10 @@ const Hero: React.FC = () => {
     e.preventDefault();
     const element = document.querySelector(targetId);
     if (element) {
-      const headerOffset = 80;
+      // Adjust offset based on screen width (md breakpoint is 768px)
+      const isMobile = window.innerWidth < 768;
+      const headerOffset = isMobile ? 60 : 80;
+
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
   
@@ -22,8 +25,8 @@ const Hero: React.FC = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1932&q=80" 
-          alt="Advogados associados" 
+          src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80" 
+          alt="Advogado atendendo cliente em escritório moderno" 
           className="w-full h-full object-cover object-right md:object-center"
         />
         {/* Gradient Overlay - Dark on left (text), transparent on right (image) */}

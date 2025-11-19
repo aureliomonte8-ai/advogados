@@ -7,6 +7,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AIChatWidget from './components/AIChatWidget';
 import Team from './components/Team';
+import Testimonials from './components/Testimonials';
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <PracticeAreas />
         <About />
         <Team />
+        <Testimonials />
         <Contact />
       </main>
       <Footer />

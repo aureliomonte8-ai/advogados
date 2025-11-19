@@ -17,7 +17,10 @@ const Header: React.FC = () => {
     e.preventDefault();
     const element = document.querySelector(targetId);
     if (element) {
-      const headerOffset = 80; // Approximate header height
+      // Adjust offset based on screen width (md breakpoint is 768px)
+      const isMobile = window.innerWidth < 768;
+      const headerOffset = isMobile ? 60 : 80;
+      
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
   
