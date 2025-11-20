@@ -1,7 +1,11 @@
-import React from 'react';
-import { Scale, Linkedin, Facebook, Instagram } from 'lucide-react';
+import React, { useState } from 'react';
+import { Scale, Linkedin, Facebook, Instagram, Loader2, Check, AlertCircle } from 'lucide-react';
 
 const Footer: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
     const element = document.querySelector(targetId);
@@ -17,6 +21,40 @@ const Footer: React.FC = () => {
         top: offsetPosition,
         behavior: "smooth"
       });
+    }
+  };
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Reset states
+    setMessage('');
+    setStatus('loading');
+
+    // Basic validation
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus('error');
+      setMessage('Por favor, insira um email válido.');
+      return;
+    }
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setStatus('success');
+      setMessage('Inscrição realizada com sucesso!');
+      setEmail('');
+
+      // Reset success message after a few seconds
+      setTimeout(() => {
+        setStatus('idle');
+        setMessage('');
+      }, 4000);
+
+    } catch (error) {
+      setStatus('error');
+      setMessage('Erro ao inscrever. Tente novamente.');
     }
   };
 
@@ -68,14 +106,48 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-white font-bold mb-6">Newsletter</h4>
             <p className="text-sm mb-4">Receba notícias jurídicas e atualizações do escritório.</p>
-            <form className="flex gap-2">
+            
+            <form onSubmit={handleSubscribe} className="flex gap-2 relative">
               <input 
                 type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={status === 'loading' || status === 'success'}
                 placeholder="Seu email" 
-                className="bg-slate-900 border border-slate-800 rounded px-3 py-2 text-sm flex-1 focus:outline-none focus:border-gold-500"
+                className={`bg-slate-900 border rounded px-3 py-2 text-sm flex-1 focus:outline-none transition-colors ${
+                  status === 'error' ? 'border-red-500 focus:border-red-500' : 'border-slate-800 focus:border-gold-500'
+                }`}
               />
-              <button className="bg-gold-600 hover:bg-gold-500 text-white px-4 py-2 rounded text-sm font-bold transition-colors">Ok</button>
+              <button 
+                type="submit"
+                disabled={status === 'loading' || status === 'success'}
+                className={`px-4 py-2 rounded text-sm font-bold transition-all flex items-center justify-center min-w-[50px] ${
+                  status === 'success' 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-gold-600 hover:bg-gold-500 text-white'
+                }`}
+              >
+                {status === 'loading' ? (
+                  <Loader2 size={18} className="animate-spin" />
+                ) : status === 'success' ? (
+                  <Check size={18} />
+                ) : (
+                  'Ok'
+                )}
+              </button>
             </form>
+            
+            {/* Feedback Messages */}
+            {status === 'error' && (
+              <p className="text-red-400 text-xs mt-2 flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                <AlertCircle size={12} /> {message}
+              </p>
+            )}
+            {status === 'success' && (
+              <p className="text-green-400 text-xs mt-2 flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                <Check size={12} /> {message}
+              </p>
+            )}
           </div>
         </div>
 
